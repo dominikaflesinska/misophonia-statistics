@@ -172,79 +172,52 @@ def main():
     plt.close(fig)
 
     # --------------------------------------------------
-    # PLOT 2: Neck angle by severity level
-    # --------------------------------------------------
+    # PLOT 2: Scatter plot with linear trend for the strongest association
 
     feature = "Neck and Lower 3rd Angle"
-    plot_data = df[[feature, outcome]].dropna().copy()
-
+    plot_data = df[[feature, outcome]].copy()
+    plot_data[feature] = pd.to_numeric(plot_data[feature], errors="coerce")
+    plot_data[outcome] = pd.to_numeric(plot_data[outcome], errors="coerce")
+    plot_data = plot_data.dropna()
     plot_data = plot_data[plot_data[outcome].between(0, 4)]
-    plot_data[outcome] = plot_data[outcome].astype(int)
 
-    severity_order = [0, 1, 2, 3, 4]
-    counts = (
-        plot_data[outcome]
-        .value_counts()
-        .reindex(severity_order, fill_value=0)
-    )
+    fig, ax = plt.subplots(figsize=(9, 6))
 
-    fig, ax = plt.subplots(figsize=(10, 6.5))
-
-    sns.boxplot(
+    sns.regplot(
         data=plot_data,
-        x=outcome,
-        y=feature,
-        order=severity_order,
-        color="#A9D1E5",
-        width=0.55,
-        showfliers=False,
-        linewidth=1.2,
+        x=feature,
+        y=outcome,
+        scatter_kws={"alpha": 0.60, "color": "#477B9E", "s": 42},
+        line_kws={"color": "#C45A46", "linewidth": 2},
+        ci=95,
         ax=ax,
-    )
-
-    sns.stripplot(
-        data=plot_data,
-        x=outcome,
-        y=feature,
-        order=severity_order,
-        color="#263746",
-        alpha=0.60,
-        jitter=0.16,
-        size=4.5,
-        ax=ax,
-    )
-
-    ax.set_xticks(
-        range(5),
-        [f"{level}\n(n={counts.loc[level]})" for level in severity_order],
     )
 
     ax.set_title(
-        "Neck and Lower 3rd Angle by Misophonia Severity",
+        "Neck and Lower 3rd Angle vs Misophonia Severity",
         loc="left",
         pad=12,
     )
-    ax.set_xlabel("Misophonia Severity (0–4)")
-    ax.set_ylabel("Neck and Lower 3rd Angle (degrees)")
-    ax.grid(axis="x", visible=False)
+    ax.set_xlabel("Neck and Lower 3rd Angle (degrees)")
+    ax.set_ylabel("Misophonia Severity (0–4)")
+    ax.set_yticks([0, 1, 2, 3, 4])
     ax.grid(axis="y", alpha=0.22)
 
     fig.text(
         0.12, 0.025,
-        "Boxes show the median and interquartile range; "
-        "points represent individual observations.",
-        fontsize=9,
+        "Each point represents one participant. Line and 95% CI show a "
+        "linear trend; the primary association was assessed using Spearman correlation.",
+        fontsize=8,
         color="#444444",
     )
 
-    fig.tight_layout(rect=[0, 0.06, 1, 1])
+    fig.tight_layout(rect=[0, 0.07, 1, 1])
     fig.savefig(
         FIGURES_DIR / "angle_by_severity.png",
         bbox_inches="tight",
     )
     plt.close(fig)
 
-    # --------------------------------------------------
     # PLOT 3: Misophonia prevalence by Convexity Angle
     # --------------------------------------------------
 
