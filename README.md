@@ -30,7 +30,7 @@ Misophonia severity is analysed on an ordinal scale from 0 to 4. A separate expl
 - Data loading and preparation using pandas
 - Spearman rank correlations between anatomical measurements and misophonia severity
 - Holm correction for multiple statistical tests
-- Boxplots with individual observations
+- Scatter plot with a fitted linear trend and 95% confidence interval
 - Exploratory comparison of misophonia prevalence across five quantile groups of Convexity Angle
 
 ## Key findings
@@ -56,9 +56,9 @@ Compares the direction and magnitude of the correlations for all four anatomical
 
 ![Spearman correlations](figures/spearman_correlations.png)
 
-### 2. Neck and Lower 3rd Angle by misophonia severity
+### 2. Neck and Lower 3rd Angle vs misophonia severity
 
-Shows the distribution of the measurement across severity levels 0–4, including individual observations.
+Each point represents one participant. The fitted line and 95% confidence interval illustrate the linear trend between Neck and Lower 3rd Angle and self-reported misophonia severity. The primary statistical analysis uses Spearman rank correlation; the fitted line is for visual interpretation only.
 
 ![Neck and Lower 3rd Angle by severity](figures/angle_by_severity.png)
 
